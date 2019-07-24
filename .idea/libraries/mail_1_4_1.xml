@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="mail-1.4.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/jar/mail-1.4.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/jar/miniconnectionpoolmanager.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/jar/nv-websocket-client-2.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/jar/org.apache.commons.io.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/jar/pdfbox-app-2.0.11.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/jar/slf4j.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/jar/sqlite-jdbc-3.8.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/jar/tyrus-client-cli-1.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/src/jar/sqlite-jdbc-3.8.6.jar!/" />
+    </SOURCES>
+  </library>
+</component>
