@@ -11,6 +11,7 @@ import java.io.File;
         private static final Logger log = Logger.getLogger(Pather.class);
         public static final String curdir;
         public static final String curdirdata;
+
         //public final static String basenameArchive = "checkarchive";
 
 
@@ -39,7 +40,9 @@ import java.io.File;
         public static final String fileShipReserved = settingsFolder + File.separator + "FileshipReservedVideo.txt";
         public static final String pointid = curdirdata + File.separator + "pointidvideo.txt";
         public static final String patchprofile = curdirdata + File.separator + "profilevodeo.txt";
-        public static final String patchUrlFile = curdir + File.separator + ".urlvideo.txt";
+        public static final String patchUrlFile = curdir + File.separator + ".urlvideo_2.txt";
+        public static final String directoryBuilder2 = curdir + File.separator+"assa2";
+        public static final String playlistdir=settingsFolder+File.separator+"list";
 
 
 

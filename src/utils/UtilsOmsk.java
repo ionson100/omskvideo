@@ -4,11 +4,15 @@ import com.google.gson.*;
 import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class UtilsOmsk {
@@ -94,5 +98,18 @@ public class UtilsOmsk {
             }
 
         }
+    }
+
+    public static List<Field> getAllFields(Class clazz) {
+        List<Field> fields = new ArrayList<>();
+
+        fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
+
+        Class superClazz = clazz.getSuperclass();
+        if (superClazz != null) {
+            fields.addAll(getAllFields(superClazz));
+        }
+
+        return fields;
     }
 }

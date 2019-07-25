@@ -6,7 +6,7 @@ import java.util.List;
 public class ModelCollection {
     public static final List<Class> classes=new ArrayList<>();
     static {
-//        classes.add(MTransactions.class);
+        classes.add(MPlayList.class);
 //        classes.add(MBarcode.class);
 //        classes.add(MCardType.class);
 //        classes.add(MLogTime.class);

@@ -12,6 +12,8 @@ import java.io.RandomAccessFile;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.channels.FileLock;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.UUID;
 import java.util.jar.Attributes;
@@ -21,22 +23,14 @@ public class Starter {
     private StringBuilder sb = new StringBuilder();
     private static final Logger log = Logger.getLogger(Starter.class);
 
-
     public Starter() {
-
         System.out.println(System.getProperty("java.library.path"));
     }
 
     public void start() {
-
         disableSslVerification();
 
-
-
-
-
         {
-
             String path = Pather.settingsFolder;
             File f = new File(path);
             if (f.exists()) {
@@ -45,11 +39,21 @@ public class Starter {
                     sb.append(path + " settings - create").append(System.lineSeparator());
                 } else {
                     sb.append(path + " Не могу созать").append(System.lineSeparator());
-
                 }
             }
+        }
 
-
+        {
+            String path = Pather.playlistdir;
+            File f = new File(path);
+            if (f.exists()) {
+            } else {
+                if (f.mkdir()) {
+                    sb.append(path + " list - create").append(System.lineSeparator());
+                } else {
+                    sb.append(path + " Не могу созать").append(System.lineSeparator());
+                }
+            }
         }
 
 
@@ -78,7 +82,7 @@ public class Starter {
             if (file.exists() == false) {
                 try {
                     file.createNewFile();
-                    String urls = "91.144.170.205\nbsr000.net\n178.62.249.118\n138.197.161.95";
+                    String urls = "138.197.161.95\nbsr000.net";
                     UtilsOmsk.writeToFile(Pather.patchUrlFile, urls);
 
                 } catch (Exception e) {
@@ -86,6 +90,7 @@ public class Starter {
                 }
             }
         }
+
         {
             File file = new File(Pather.uuidFile);
             if (file.exists() == false) {
@@ -102,27 +107,19 @@ public class Starter {
             log.error(sb.toString());
         }
 
-
         new Configure(Pather.base_sqlite);
 
-
-
-
-
-
-
-
-
-
-        // new CheckArchiveE().init();
-        // new AmountSelf ().init ();
-        // new Requests().init ();
-        // new MessageBody().init();
-
-
+         // удаление плайлистов, плеер не запущен
+        File file=new File(Pather.playlistdir);
+        if(file.exists()) {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File file1 : files) {
+                    file1.delete();
+                }
+            }
+        }
     }
-
-
 
     private static boolean isFileshipAlreadyRunning() {
 
@@ -154,35 +151,36 @@ public class Starter {
         return false;
     }
 
-
-
-
     private static void disableSslVerification() {
         try {
-            TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-
-                public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                }
-
-                public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                }
-            }
-            };
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, trustAllCerts, new java.security.SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-            HostnameVerifier allHostsValid = new HostnameVerifier() {
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            };
-            HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+            divableSslVrification();
         } catch (Exception e) {
             log.error(e);
 
         }
+    }
+
+    public static void divableSslVrification() throws NoSuchAlgorithmException, KeyManagementException {
+        TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+
+            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+            }
+
+            public void checkServerTrusted(X509Certificate[] certs, String authType) {
+            }
+        }
+        };
+        SSLContext sc = SSLContext.getInstance("SSL");
+        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        HostnameVerifier allHostsValid = new HostnameVerifier() {
+            public boolean verify(String hostname, SSLSession session) {
+                return true;
+            }
+        };
+        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
     }
 }

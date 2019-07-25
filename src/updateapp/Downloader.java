@@ -5,6 +5,7 @@ import javafx.concurrent.Task;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import org.apache.log4j.Logger;
+import utils.Starter;
 import utils.UtilsOmsk;
 
 import javax.net.ssl.*;
@@ -15,7 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.attribute.FileTime;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
 import java.util.*;
 
 public class Downloader extends Task {
@@ -27,7 +27,7 @@ public class Downloader extends Task {
     private int code;
     private HttpURLConnection con = null;
     private String urlCore, path;
-    private boolean sslDiasableVerifications;
+
 
     private static void validateClientFile(String path, long httplast, String etag) throws IOException {
 
@@ -54,27 +54,7 @@ public class Downloader extends Task {
     // отключить проверку для ssl
     private static void disableSslVerification() throws NoSuchAlgorithmException, KeyManagementException {
 
-        TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
-            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
-
-            public void checkClientTrusted(X509Certificate[] certs, String authType) {
-            }
-
-            public void checkServerTrusted(X509Certificate[] certs, String authType) {
-            }
-        }
-        };
-        SSLContext sc = SSLContext.getInstance("SSL");
-        sc.init(null, trustAllCerts, new java.security.SecureRandom());
-        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-        HostnameVerifier allHostsValid = new HostnameVerifier() {
-            public boolean verify(String hostname, SSLSession session) {
-                return true;
-            }
-        };
-        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+        Starter.divableSslVrification();
 
     }
 
@@ -93,9 +73,7 @@ public class Downloader extends Task {
         InputStream input = null;
         OutputStream output = null;
         try {
-            if (sslDiasableVerifications) {
-                disableSslVerification();
-            }
+
             int count;
             URL url = new URL(urlCore);
             if (urlCore.toLowerCase().startsWith("https:")) {
@@ -130,7 +108,7 @@ public class Downloader extends Task {
             con.connect();
             Map<String, List<String>> map = con.getHeaderFields();
             code = con.getResponseCode();// 206 add download
-            if (code == 304 || code == 404) return;
+            if (code == 304 || code == 404||code == 403||code==500||code==205) return;
             if (code == 200) {// файл измененет или  не начал качаться на клиенте
                 {
                     File f = new File(path);
@@ -189,65 +167,15 @@ public class Downloader extends Task {
             }
 
 
-            if (code == 304 || code == 404) return;
-
-            int res = path.indexOf("static" + File.separator + "share" + File.separator + "app" + File.separator);
-            if (res == -1) {
+            if (code == 304 || code == 404||code == 403||code==500||code==205) {
+                log.error(String.format("Error download: %s code: %d", path, code));
                 return;
             }
-            String filename = new File(path).getName();
-            String intstr = filename.replace(".rar", "").replace(".tar.gz", "").replace(".", "");
-            String intcur = null;
 
-//            intcur = SettingAppE.getInstance().getVersion().replace(".", "");
-
-
-//            try {
-//                int ser = Integer.parseInt(intstr);
 //
-//                int cur = Integer.parseInt(intcur);
-//                if (ser > cur) {
-//                    boolean isButton = false;
-//                    for (Node node : Controller.getInstans().panel_buttons.getChildren()) {
-//                        if (node.getUserData() != null && node.getUserData().toString().equals(Main.BUTTONUPDATE)) {
-//                            isButton = true;
-//                            break;
-//                        }
-//                    }
-//                    if (isButton == false) {
-//                        Platform.runLater(() -> {
-//                            if(SettingAppE.getInstance().user_id==null){
-//
-//                            }else {
-//                                Button button = new Button("Обновление");
-//                                button.getStyleClass().add("update_button");
-//                                button.setUserData(Main.BUTTONUPDATE);
-//                                button.setOnAction(event -> Controller.getInstans().onUpdateApp());
-//                                Controller.getInstans().panel_buttons.getChildren().add(button);
-//                                button.setPrefHeight(Controller.getInstans().panel_buttons.getPrefHeight());
-//                                if (SettingAppE.getInstance().user_id.trim().equals("1")||SettingAppE.getShowButtonUpdate()==1) {
-//                                    button.setVisible(true);
-//                                }else {
-//                                    button.setVisible(false);
-//                                }
-//                            }
-//
-//                        });
-//                    }
-//                }
-//            } catch (Exception ex) {
-//                log.error(ex);
-//            }
         }
     }
 
-    public void execute() {
-
-
-        Thread thread = new Thread(this);
-        thread.start();
-
-    }
 
     public Downloader setUrl(String urlCore) {
         this.urlCore = urlCore.trim();

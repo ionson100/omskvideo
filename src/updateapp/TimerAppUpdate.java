@@ -2,7 +2,11 @@ package updateapp;
 
 import com.sun.xml.internal.ws.api.config.management.policy.ManagementAssertion;
 import javafx.application.Platform;
+import model.MContent;
+import model.MPlayList;
 import org.apache.log4j.Logger;
+import orm.Configure;
+import sample.Controller;
 import utils.DesktopApi;
 import utils.Pather;
 import utils.SettingsApp;
@@ -13,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
@@ -35,6 +40,7 @@ public class TimerAppUpdate {
     public void run(int timerSec) {
 
         executor.scheduleWithFixedDelay(new RemindTask(), 5, timerSec, TimeUnit.SECONDS);
+        log.info("Запус таймера обновления файлов: 5-"+timerSec+" second");
 
 
     }
@@ -43,22 +49,10 @@ public class TimerAppUpdate {
         //timer.cancel();
         service.shutdown();
         executor.shutdown();
+        log.info("Остановка таймера обновления файлов");
     }
 
     public synchronized void activate() {
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         InputStreamReader ee = null;
         BufferedReader reader = null;
@@ -67,9 +61,15 @@ public class TimerAppUpdate {
         try {
 
 
-            String idpoint = String.valueOf(SettingsApp.getPointId());
-            String version = SettingsApp.getVersion();
-            URL url = new URL("https://" + SettingsApp.getUrl() + "/pos_info?point=" + idpoint + "&ver=" + version );
+            String uuid=SettingsApp.getUuid().replace("-","");
+            String idpoint ="100124";// String.valueOf(SettingsApp.getPointId());
+            String version = "001";//SettingsApp.getVersion();
+            String urls= SettingsApp.getUrl();
+            URL url = new URL(String.format("https://%s/ad_client_playlist?point=%s&device=%s",//
+                    urls,
+                    idpoint,
+                    uuid));
+            log.info(url);
             conn = (HttpsURLConnection) url.openConnection();
             conn.setInstanceFollowRedirects(false);
             conn.setReadTimeout(UtilsOmsk.READ_CONNECT_TIMEOUT /*milliseconds*/);
@@ -102,27 +102,38 @@ public class TimerAppUpdate {
             String ssres = sb.toString();
             if(ssres.trim().length()==0) return;
 
-            BodyFiles bodyFiles = UtilsOmsk.getGson().fromJson(ssres, BodyFiles.class);
+            MContent bodyFiles = UtilsOmsk.getGson().fromJson(ssres, MContent.class);
 
-            for (String file : bodyFiles.files) {
-                String s = file.replace("https://", "");
-                s = s.substring(s.indexOf("/"));
-                if (DesktopApi.getOs() == DesktopApi.EnumOS.linux) {
-                    s = Pather.curdir + File.separator + s;
-                } else {
-                    s = Pather.curdir + s;
+            SettingsApp.setPointId(bodyFiles.point_id);
+
+
+            if(bodyFiles.playlist.size()>0){
+                List<MPlayList> playLists=Configure.getSession().getList(MPlayList.class,null);
+                if(playLists.size()!=bodyFiles.playlist.size()){
+                    Configure.getSession().deleteTable(MPlayList.TABLE_NAME);
+                    Configure.bulk(MPlayList.class,bodyFiles.playlist);
+                }else {
+                    for (int i = 0; i < playLists.size(); i++) {
+                        if(playLists.get(i).path.equals(bodyFiles.playlist.get(i).path)==false){
+                            Configure.getSession().deleteTable(MPlayList.TABLE_NAME);
+                            Configure.bulk(MPlayList.class,bodyFiles.playlist);
+                            break;
+                        }
+                    }
                 }
-                if (service.isShutdown() == false) {
-                    service.submit(new Downloader().setUrl(file).setPath(s));//.execute ();
-                }
+
             }
 
 
 
 
-
-
-
+            for (MPlayList file : bodyFiles.playlist) {
+                String urld = "https://"+SettingsApp.getUrl()+"/"+file.path;
+                String s=Pather.curdir + file.path;
+                if (service.isShutdown() == false) {
+                    service.submit(new Downloader().setUrl(urld).setPath(s));//.execute ();
+                }
+            }
 
 
         } catch (Exception ex) {
