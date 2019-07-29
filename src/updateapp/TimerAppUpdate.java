@@ -62,8 +62,8 @@ public class TimerAppUpdate {
 
 
             String uuid=SettingsApp.getUuid().replace("-","");
-            String idpoint ="100124";// String.valueOf(SettingsApp.getPointId());
-            String version = "001";//SettingsApp.getVersion();
+            String idpoint =String.valueOf(SettingsApp.getPointId());
+            String version = SettingsApp.getVersion();
             String urls= SettingsApp.getUrl();
             URL url = new URL(String.format("https://%s/ad_client_playlist?point=%s&device=%s",//
                     urls,
@@ -121,7 +121,6 @@ public class TimerAppUpdate {
                         }
                     }
                 }
-
             }
 
 

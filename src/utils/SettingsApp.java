@@ -65,14 +65,14 @@ public class SettingsApp {
     }
 
     public static String getStringVersion() throws IOException {
-        String classPath = Main.class.getResource(Main.class.getSimpleName() + ".class").toString();
-        String libPath = classPath.substring(0, classPath.lastIndexOf("bitnic/core"));
-        String filePath = libPath + "META-INF/MANIFEST.MF";
-        System.out.println("File:  " + filePath);
-        Manifest manifest = null;
-        manifest = new Manifest(new URL(filePath).openStream());
-        Attributes attr = manifest.getMainAttributes();
-        return attr.getValue("Implementation-Version");
+//        String classPath = Main.class.getResource(Main.class.getSimpleName() + ".class").toString();
+//        String libPath = classPath.substring(0, classPath.lastIndexOf("sample/"));
+//        String filePath = libPath + "META-INF/MANIFEST.MF";
+//        System.out.println("File:  " + filePath);
+//        Manifest manifest = null;
+//        manifest = new Manifest(new URL(filePath).openStream());
+//        Attributes attr = manifest.getMainAttributes();
+        return "0.0.1";//attr.getValue("Implementation-Version");
     }
 
     private static int profile;

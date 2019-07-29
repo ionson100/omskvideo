@@ -25,6 +25,7 @@
              <Button fx:id="bt_files" mnemonicParsing="false" prefWidth="200.0" text="Files" />
              <Button fx:id="bt_file_error" mnemonicParsing="false" prefWidth="200.0" text="Log file" />
              <Button fx:id="bt_list_video" mnemonicParsing="false" prefWidth="200.0" text="List video" />
+             <Button fx:id="bt_edit_point" mnemonicParsing="false" prefWidth="200.0" text="Edit Point id" />
 
             <Button fx:id="bt_exit" mnemonicParsing="false" prefWidth="200.0" text="Exit app" />
          </children>
