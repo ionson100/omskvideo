@@ -21,10 +21,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("sample2.fxml"));
         primaryStage.setTitle("Omsk Video");
-        primaryStage.setScene(new Scene(root, 1400, 800));
-        primaryStage.setMaximized(true);
+        primaryStage.setScene(new Scene(root, 1000, 400));
+        //primaryStage.setMaximized(true);
         primaryStage.show();
         log.info("Старт программы");
     }
@@ -32,8 +32,9 @@ public class Main extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
-        log.info("Старт программы");
-        Controller.timerUpdateStop();
+        log.info("Стоп программа");
+        Controller2.timerUpdateStop();
+        System.exit(0);
     }
 
     public static void main(String[] args) {

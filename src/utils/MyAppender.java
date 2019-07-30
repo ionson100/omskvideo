@@ -34,8 +34,8 @@ public /*static*/ class MyAppender extends AppenderSkeleton {
 
 
         if (loggingEvent.getLevel() == Level.ERROR) {
-            String msg = String.format("%s#  %s %s  %s  -  %s ",
-                    SettingsApp.getPointId(),
+            String msg = String.format("#  %s %s  %s  -  %s ",
+
                     getStringTimeForError(new Date(loggingEvent.timeStamp)),
                     loggingEvent.getLevel(),
                     loggingEvent.getLocationInformation().fullInfo,

@@ -18,7 +18,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
-    public static TimerAppUpdate timerUpdate;
     public Button bt_files;
     public Button bt_list_video;
     public Button bt_file_error;
@@ -29,9 +28,6 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        timerUpdate = new TimerAppUpdate();
-        timerUpdate.run(300);
         bt_exit.setOnAction(event -> Platform.exit());
         //bt_files.setOnAction(event -> new ShowmenFiles().show(tableview));
         bt_list_video.setOnAction(event -> new ShowmenListVideo().show(tableview));
@@ -45,13 +41,8 @@ public class Controller implements Initializable {
         bt_edit_point.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                DialogEditPointId.show(""+SettingsApp.getPointId());
+
             }
         });
     }
-    public static void timerUpdateStop() {
-        timerUpdate.stop();
-    }
-
-
 }

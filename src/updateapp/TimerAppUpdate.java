@@ -7,6 +7,9 @@ import model.MPlayList;
 import org.apache.log4j.Logger;
 import orm.Configure;
 import sample.Controller;
+import sample.Controller2;
+import sample.ExeScript;
+import sample.Runner;
 import utils.DesktopApi;
 import utils.Pather;
 import utils.SettingsApp;
@@ -15,12 +18,11 @@ import utils.UtilsOmsk;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -30,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 public class TimerAppUpdate {
 
 
-    private static final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+    private static final ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
 
     private static final Logger log = Logger.getLogger(TimerAppUpdate.class);
     //Timer timer;
@@ -39,7 +41,7 @@ public class TimerAppUpdate {
 
     public void run(int timerSec) {
 
-        executor.scheduleWithFixedDelay(new RemindTask(), 5, timerSec, TimeUnit.SECONDS);
+        executor.scheduleWithFixedDelay(new RemindTask(), 5, 20, TimeUnit.SECONDS);
         log.info("Запус таймера обновления файлов: 5-"+timerSec+" second");
 
 
@@ -54,6 +56,20 @@ public class TimerAppUpdate {
 
     public synchronized void activate() {
 
+
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTime(new Date());
+        int h=calendar.get(Calendar.HOUR_OF_DAY);
+        int m=calendar.get(Calendar.MINUTE);
+        if(h>=21&&m>0){
+            log.error("Выключение программы по таймеру: "+new Date().toString());
+            ExeScript testScript = new ExeScript();
+            try {
+                testScript.runScript("shutdown -h now");
+            } catch (Exception e) {
+                log.error(e);
+            }
+        }
         InputStreamReader ee = null;
         BufferedReader reader = null;
         HttpsURLConnection conn = null;
@@ -62,12 +78,12 @@ public class TimerAppUpdate {
 
 
             String uuid=SettingsApp.getUuid().replace("-","");
-            String idpoint =String.valueOf(SettingsApp.getPointId());
+
             String version = SettingsApp.getVersion();
             String urls= SettingsApp.getUrl();
-            URL url = new URL(String.format("https://%s/ad_client_playlist?point=%s&device=%s",//
+            URL url = new URL(String.format("https://%s/ad_client_playlist?device=%s",//
                     urls,
-                    idpoint,
+
                     uuid));
             log.info(url);
             conn = (HttpsURLConnection) url.openConnection();
@@ -104,19 +120,22 @@ public class TimerAppUpdate {
 
             MContent bodyFiles = UtilsOmsk.getGson().fromJson(ssres, MContent.class);
 
-            SettingsApp.setPointId(bodyFiles.point_id);
 
 
+
+            boolean isNew=false;
             if(bodyFiles.playlist.size()>0){
                 List<MPlayList> playLists=Configure.getSession().getList(MPlayList.class,null);
                 if(playLists.size()!=bodyFiles.playlist.size()){
                     Configure.getSession().deleteTable(MPlayList.TABLE_NAME);
                     Configure.bulk(MPlayList.class,bodyFiles.playlist);
+                    isNew=true;
                 }else {
                     for (int i = 0; i < playLists.size(); i++) {
                         if(playLists.get(i).path.equals(bodyFiles.playlist.get(i).path)==false){
                             Configure.getSession().deleteTable(MPlayList.TABLE_NAME);
                             Configure.bulk(MPlayList.class,bodyFiles.playlist);
+                            isNew=true;
                             break;
                         }
                     }
@@ -126,14 +145,18 @@ public class TimerAppUpdate {
 
 
 
+
             for (MPlayList file : bodyFiles.playlist) {
                 String urld = "https://"+SettingsApp.getUrl()+"/"+file.path;
+                System.out.println(urld);
                 String s=Pather.curdir + file.path;
                 if (service.isShutdown() == false) {
                     service.submit(new Downloader().setUrl(urld).setPath(s));//.execute ();
                 }
             }
-
+            if(isNew==true){
+                Controller2.ShowDownloadesFile();
+            }
 
         } catch (Exception ex) {
             log.error(ex);
@@ -151,6 +174,16 @@ public class TimerAppUpdate {
             } catch (Exception ex) {
                 log.error(ex);
             }
+
+
+
+
+            new Runner().run();
+
+
+
+
+
 
         }
     }

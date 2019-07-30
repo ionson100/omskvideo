@@ -18,39 +18,10 @@ import java.util.jar.Manifest;
 
 public class SettingsApp {
     private transient static final Logger log = Logger.getLogger(SettingsApp.class);
-    private static int pointid;
-    public static synchronized int getPointId() {
-        if (pointid == -1) {
-            String dd = UtilsOmsk.readFile(Pather.pointid);
-            if (dd == null) {
-                pointid = 0;
-            }
-            try {
-                if(dd!=null){
-                    dd = dd.replace("\n", "");
-                    pointid = Integer.parseInt(dd);
-                }
-
-            } catch (Exception ex) {
-                log.error(ex);
-                pointid = 0;
-            }
-        }
-        return pointid;
-
-    }
-
-    public static  void setPointId(String id) throws Exception {
-        try{
-            pointid=Integer.parseInt(id);
-            UtilsOmsk.rewriteFile(Pather.pointid,id);
-        }catch (Exception es){
-            log.error(es);
-            throw es;
-        }
 
 
-    }
+
+
 
     private static transient String _version="";
     public static synchronized String getVersion()  {

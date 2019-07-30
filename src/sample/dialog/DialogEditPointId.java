@@ -19,12 +19,7 @@ public class DialogEditPointId {
 
         result.ifPresent(name -> {
 
-            try {
-                SettingsApp.setPointId(name);
-            } catch (Exception e) {
-                MyDialog.showError(e.getMessage());
-                e.printStackTrace();
-            }
+
         });
     }
 }
