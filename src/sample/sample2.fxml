@@ -1,28 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<GridPane style="-fx-background-color: bisque" alignment="center" hgap="10" prefHeight="500.0" prefWidth="500.0" vgap="10"
-          xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller2">
+<GridPane   fx:id="myPane" alignment="center"
+          prefHeight="500.0" prefWidth="500.0" vgap="10"
+            xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller2">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     </columnConstraints>
     <rowConstraints>
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     </rowConstraints>
-    <children>
-      <VBox fx:id="vbox_head" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+   <children>
+      <Pane prefHeight="200.0" prefWidth="200.0"  styleClass="pane">
          <children>
-            <Button fx:id="bt_action" mnemonicParsing="false" text="Button" />
+            <VBox fx:id="vbox_head" layoutX="14.0" layoutY="14.0" prefHeight="471.0" prefWidth="477.0" />
          </children>
-         <GridPane.margin>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-         </GridPane.margin>
-      </VBox>
-    </children>
+      </Pane>
+   </children>
 </GridPane>

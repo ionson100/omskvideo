@@ -3,6 +3,7 @@ package sample;
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import model.MContent;
 import model.MPlayList;
@@ -17,14 +18,22 @@ public class Controller2 implements Initializable {
     public static Controller2 controller2;
     public static TimerAppUpdate timerUpdate;
     public VBox vbox_head;
-    public Button bt_action;
+    public GridPane myPane;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        //vbox_head.setStyle("-fx-background-image: url(images/house.png)");
         timerUpdate = new TimerAppUpdate();
         timerUpdate.run(300);
         controller2=this;
         ShowDownloadesFile();
+        myPane.setStyle("-fx-background-color: black;-fx-background-image: url(/sample/images/logo.jpg);" +
+                "-fx-background-repeat: stretch;" +
+                "-fx-background-size: 100% 100%;"+
+                "-fx-background-position: center center;");
+
+
+
     }
     public static void timerUpdateStop() {
         timerUpdate.stop();

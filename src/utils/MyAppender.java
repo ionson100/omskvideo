@@ -1,14 +1,10 @@
 package utils;
 
-import javafx.application.Platform;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -34,18 +30,15 @@ public /*static*/ class MyAppender extends AppenderSkeleton {
 
 
         if (loggingEvent.getLevel() == Level.ERROR) {
-            String msg = String.format("#  %s %s  %s  -  %s ",
+            String msg = String.format("#  %s %s  %s %s -  %s ",
 
                     getStringTimeForError(new Date(loggingEvent.timeStamp)),
                     loggingEvent.getLevel(),
                     loggingEvent.getLocationInformation().fullInfo,
+                    SettingsApp.getUrl(),
                     loggingEvent.getMessage());
 
-            Platform.runLater(() -> {
-
-
-
-            });
+            new SendError().send(msg);
         }
 
 

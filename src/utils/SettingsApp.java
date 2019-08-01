@@ -1,20 +1,11 @@
 package utils;
 
 import org.apache.log4j.Logger;
-import sample.Main;
-import sample.table.ColumnUserObject;
 
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.Struct;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 
 public class SettingsApp {
     private transient static final Logger log = Logger.getLogger(SettingsApp.class);
@@ -48,16 +39,17 @@ public class SettingsApp {
 
     private static int profile;
     public static synchronized String getUrl() {
+        return "bsr000.net";
 
-        try {
-
-            List<String> strings=  Files.readAllLines(Paths.get(Pather.patchUrlFile));
-            int p=getProfile();
-            return strings.get(p).trim ();
-        }catch (Exception ex){
-            log.error(ex);
-            return null;
-        }
+//        try {
+//
+//            List<String> strings=  Files.readAllLines(Paths.get(Pather.patchUrlFile));
+//            int p=getProfile();
+//            return strings.get(p).trim ();
+//        }catch (Exception ex){
+//            log.error(ex);
+//            return null;
+//        }
     }
 
     public static synchronized int getProfile() {
@@ -85,17 +77,7 @@ public class SettingsApp {
         return new SettingsApp();
     }
 
-    //словарь ширины колонак таблицадмина
-    public final Map<String, List<ColumnUserObject>> map = new HashMap<>();
 
-
-    public List<ColumnUserObject> getColumnUserObjects(String tableName) {
-        if (map.containsKey(tableName) == false) {
-            List<ColumnUserObject> objectList = new ArrayList<>();
-            map.put(tableName, objectList);
-        }
-        return map.get(tableName);
-    }
 
     private static String uuid;
     public static synchronized String getUuid() {

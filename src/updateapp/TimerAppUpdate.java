@@ -1,27 +1,20 @@
 package updateapp;
 
-import com.sun.xml.internal.ws.api.config.management.policy.ManagementAssertion;
-import javafx.application.Platform;
 import model.MContent;
 import model.MPlayList;
 import org.apache.log4j.Logger;
 import orm.Configure;
-import sample.Controller;
 import sample.Controller2;
 import sample.ExeScript;
 import sample.Runner;
-import utils.DesktopApi;
 import utils.Pather;
 import utils.SettingsApp;
 import utils.UtilsOmsk;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -41,7 +34,8 @@ public class TimerAppUpdate {
 
     public void run(int timerSec) {
 
-        executor.scheduleWithFixedDelay(new RemindTask(), 5, 20, TimeUnit.SECONDS);
+        timerSec=60*15;
+        executor.scheduleWithFixedDelay(new RemindTask(), 5, timerSec, TimeUnit.SECONDS);
         log.info("Запус таймера обновления файлов: 5-"+timerSec+" second");
 
 

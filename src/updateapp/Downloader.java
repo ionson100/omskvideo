@@ -1,14 +1,11 @@
 package updateapp;
 
-import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
 import org.apache.log4j.Logger;
 import utils.Starter;
 import utils.UtilsOmsk;
 
-import javax.net.ssl.*;
+import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;

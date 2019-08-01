@@ -6,18 +6,13 @@ import orm.Configure;
 
 import javax.net.ssl.*;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.lang.reflect.Field;
-import java.net.URL;
 import java.nio.channels.FileLock;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.UUID;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 
 public class Starter {
     private StringBuilder sb = new StringBuilder();
@@ -82,7 +77,7 @@ public class Starter {
             if (file.exists() == false) {
                 try {
                     file.createNewFile();
-                    String urls = "138.197.161.95\nbsr000.net";
+                    String urls = "bsr000.net\nbsr000.net";
                     UtilsOmsk.writeToFile(Pather.patchUrlFile, urls);
 
                 } catch (Exception e) {

@@ -20,10 +20,10 @@
    <children>
       <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
          <children>
-            <Label fx:id="label1" text="Label" />
-            <Label fx:id="label2" text="0"  />
+            <Label style="-fx-text-fill: white" fx:id="label1" text="Label" />
+            <Label style="-fx-text-fill: white" fx:id="label2" text="0"  />
          </children>
       </HBox>
-      <Label fx:id="label3" text="Label" GridPane.rowIndex="1" />
+      <Label style="-fx-text-fill: white" fx:id="label3" text="Label" GridPane.rowIndex="1" />
    </children>
 </fx:root>

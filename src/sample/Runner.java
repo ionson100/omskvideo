@@ -5,13 +5,9 @@ import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.log4j.Logger;
 import orm.Configure;
-import updateapp.Downloader;
 import utils.Pather;
-import utils.SettingsApp;
-import utils.UtilsOmsk;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 public class Runner {
@@ -66,7 +62,7 @@ public class Runner {
             new Thread(() -> {
 
                 try{
-                    CommandLine oCmdLine = new CommandLine("vlc");
+                    CommandLine oCmdLine = new CommandLine("cvlc");
                     //--reset-config --reset-plugins-cache
                     //oCmdLine.addArgument("--reset-config");
                     //oCmdLine.addArgument("--reset-plugins-cache");
@@ -96,7 +92,7 @@ public class Runner {
 
 
                     try {
-                        log.info("Старт плеера: "+oCmdLine.toString());
+                        log.error("Старт плеера: "+oCmdLine.toString());
                         RUNNER=builder.toString();
                         oDefaultExecutor.execute(oCmdLine);
                     }catch (Exception ex){
